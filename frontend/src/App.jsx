@@ -191,8 +191,6 @@ function App() {
 
       <section className="card">
         <h2>Admin Users</h2>
-        <p>This should be admin-only, but it is intentionally vulnerable.</p>
-
         <button onClick={loadAdminUsers}>Load Users</button>
 
         <ul>
