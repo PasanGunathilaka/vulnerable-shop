@@ -176,7 +176,27 @@ app.get('/api/products/:productId/reviews', async (req, res, next) => {
     next(error);
   }
 });
+app.put('/api/orders/:id/quantity', authMiddleware, async (req, res, next) => {
+  try {
+    const orderId = req.params.id;
+    const { quantity } = req.body;
 
+    const result = await pool.query(`
+      UPDATE orders
+      SET quantity = ${quantity}
+      WHERE id = ${orderId}
+      RETURNING id, user_id, product_id, quantity, total
+    `);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    next(error);
+  }
+});
 app.use((error, req, res, next) => {
   res.status(500).json({
     message: error.message,
